@@ -6,6 +6,8 @@ int main(int argc, char *argv[]){
 	char *fileName= &(*argv[1]);
 	printf("%s", fileName);	
 	getFileContent(fileName, &stringArr);
+	printf("at index 1");
+//	printf("%s", stringArr[1][100]);
 }
 
 void getFileContent(const char *name, char *arr[10][100]){
@@ -20,7 +22,7 @@ void getFileContent(const char *name, char *arr[10][100]){
 		exit(EXIT_FAILURE);
 	}
 	while(fgets(line,sizeof line, fp)!=NULL){
-		arr[currIndex][]=line;
+		arr[currIndex][100]=line;
 		currIndex++;
 		fprintf(stdout,"%s",line);
 	}
