@@ -2,13 +2,13 @@
 #include <stdlib.h>
 void getFileContent(const char *name, char *arr[][100]);
 int main(int argc, char *argv[]){
-	char stringArr[][100];
+	char stringArr[10][100];
 	char *fileName= &(*argv[1]);
 	printf("%s", fileName);	
 	getFileContent(fileName, &stringArr);
 }
 
-void getFileContent(const char *name, char *arr[][100]){
+void getFileContent(const char *name, char *arr[10][100]){
 	FILE *fp;
 	int c;
 	size_t len=0;
@@ -20,7 +20,7 @@ void getFileContent(const char *name, char *arr[][100]){
 		exit(EXIT_FAILURE);
 	}
 	while(fgets(line,sizeof line, fp)!=NULL){
-		arr[currIndex]=line;
+		arr[currIndex][]=line;
 		currIndex++;
 		fprintf(stdout,"%s",line);
 	}
