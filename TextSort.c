@@ -27,14 +27,13 @@ int main(int argc, char *argv[]){
 	for(int i=0;i<5;i++){
 		printf(stringArr[i]);
 	}
-
 	//testing sort with index
 	
 	/**
 	int x;
-	x = compareStringsWithIndex(&stringArr[1], &stringArr[2], 2);
+	x = compareStringsWithIndex(&stringArr[1], &stringArr[2], 4);
 	printf("%d", x);
-	**/ 
+	**/
 }
 
 void getFileContent(const char *name, char *arr[10]){
@@ -92,13 +91,12 @@ int compareStringsWithIndex(const void *elem1, const void *elem2, int index){
 	
 	token2 = strtok(str2, s); 
 	int j = 0; 
-	while (token2!=NULL && i < (index-1)) {
+	while (token2!=NULL && j < (index-1)) {
 		token2 = strtok(NULL, s);
 		j++; 
 	} 
 	
-	char *word2 = token2; 
-
+	char *word2 = token2;  
 	/**compare nth tokens**/
 	int diff; 
 	diff = strcmp(word1, word2); 
