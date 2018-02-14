@@ -7,7 +7,7 @@ int compareStrings(const void *elem1, const void *elem2);
 int main(int argc, char *argv[]){
 	int numLines=10;
 	char *stringArr[numLines];
-	printf("numWord is %i", argc);	
+	printf("numWord is %i\n", argc);	
 	int numWord=0;
 	char *fileName;//= &(*argv[1]);
 	if(argc==0){
@@ -27,6 +27,14 @@ int main(int argc, char *argv[]){
 	for(int i=0;i<5;i++){
 		printf(stringArr[i]);
 	}
+
+	//testing sort with index
+	
+	/**
+	int x;
+	x = compareStringsWithIndex(&stringArr[1], &stringArr[2], 2);
+	printf("%d", x);
+	**/ 
 }
 
 void getFileContent(const char *name, char *arr[10]){
@@ -66,7 +74,36 @@ int compareStringsWithIndex(const void *elem1, const void *elem2, int index){
 	/**deference to get strings**/
 	char *str1 = *strptr1;
 	char *str2 = *strptr2;
-	int diff;
+	
+
+	/**split on space**/
+	const char s[2] = " "; 
+	char *token1;  
+	char *token2; 
+	
+	token1 = strtok(str1, s); 
+	/**get nth tokens**/ 	
+	int i = 0; 
+	while (token1!=NULL && i < (index-1)) { 
+		token1=strtok(NULL, s); 
+		i++; 
+	} 	
+	char *word1 = token1; 
+	
+	token2 = strtok(str2, s); 
+	int j = 0; 
+	while (token2!=NULL && i < (index-1)) {
+		token2 = strtok(NULL, s);
+		j++; 
+	} 
+	
+	char *word2 = token2; 
+
+	/**compare nth tokens**/
+	int diff; 
+	diff = strcmp(word1, word2); 
+	return diff; 
+	
 }
 
 
