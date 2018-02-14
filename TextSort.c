@@ -5,19 +5,24 @@ void getFileContent(const char *name, char *arr[10]);
 void sortFile(char *arr[10]);
 int compareStrings(const void *elem1, const void *elem2);
 int main(int argc, char *argv[]){
-	printf("in main");
 	int numLines=10;
-	char *stringArr[numLines];	
-	char *fileName= &(*argv[1]);
-	getFileContent(fileName, stringArr);
-	for(int i=0;i<5;i++){
-		printf("index %s",stringArr[i]); //char * is a string
+	char *stringArr[numLines];
+	printf("numWord is %i", argc);	
+	int numWord=0;
+	char *fileName;//= &(*argv[1]);
+	if(argc==0){
+		printf("Error");
 	}
-	
-	char str1[] = "Hello"; 
-	char str2[] = "World";
-//	int comp=compareStrings(&str1, &str2);
-//	printf("diff is %i", comp);
+	else if(argc==2){
+		fileName = &(*argv[1]);
+		//getFileContent(fileName, stringArr);
+	}
+	else{
+		numWord=*argv[1];
+		fileName = &(*argv[2]);
+	}
+		
+	getFileContent(fileName, stringArr);
 	sortFile(stringArr);
 	for(int i=0;i<5;i++){
 		printf(stringArr[i]);
@@ -55,6 +60,15 @@ int compareStrings (const void *elem1, const void *elem2) {
 	return diff; 
 }
 	
+int compareStringsWithIndex(const void *elem1, const void *elem2, int index){
+	char **strptr1=(char **) elem1;
+	char **strptr2=(char **) elem2;
+	/**deference to get strings**/
+	char *str1 = *strptr1;
+	char *str2 = *strptr2;
+	int diff;
+}
+
 
 void sortFile(char *arr[10]) {
 	qsort(arr, 5, sizeof(char *), compareStrings); 
