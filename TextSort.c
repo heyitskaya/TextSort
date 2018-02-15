@@ -5,32 +5,38 @@ void getFileContent(const char *name, char *arr[10]);
 void sortFile(char *arr[10]);
 void sortFileWithIndex(char *arr[10]);
 int compareStrings(const void *elem1, const void *elem2);
-
+int numLines;
 //global variable
 //int index; 
-int numWords = 2; 
+int numLines;
+int numWords; 
 int main(int argc, char *argv[]){
-	int numLines=10;
-	char *stringArr[numLines];
+	//int numLines=getNumLines;
+	//char *stringArr[numLines];
 	char *fileName;
 	char *flag;
 	
 	printf("argc %i\n", argc);
+	printf( argv[2]);
 	if(argc==0){
 		printf("Error");
 	}
 
 	else if (argc == 3) {
 		fileName = &(*argv[1]);
+		numLines=getNumLines(fileName);	
 		flag = &(*argv[2]); 
 		
 		if (strlen(flag) == 2) { 
+
 			//adding code to read flag, just need to change the number to int from char properly 
-			char c = flag[1];			
-			//index = (int) strtol(c, (char **)NULL, 10);
+			char *ptr;
+   			
+			 numWords=((int)strtol(flag,&ptr,10))*(-1);	
+			printf("num is %d", numWords);
 		}
 		else {
-			printf("Error: bad command line paramter");
+			printf("Error: bad command line parameter");
 			exit(1); 
 		} 			 
 	}
@@ -43,7 +49,8 @@ int main(int argc, char *argv[]){
 	//	numWord=*argv[1];
 		fileName = &(*argv[2]);
 	}
-		
+//allocate size of array before getFileContent
+	char *stringArr[numLines];		
 	getFileContent(fileName, stringArr);
 	//sortFile(stringArr);
 	//testing sort with index
@@ -53,7 +60,7 @@ int main(int argc, char *argv[]){
 	
 		
 	if(numWords!=0){
-		printf("testing sort file with index ");
+	//	printf("testing sort file with index ");
 		sortFileWithIndex(stringArr);
 	}
 	else{
@@ -65,7 +72,20 @@ int main(int argc, char *argv[]){
 		printf(stringArr[i]);
 	}
 }
-
+int getNumLines(const char *name){
+	int n=0;
+	FILE *fp;
+	char line[256];
+	fp=fopen(name,"r");
+	if(fp==NULL){
+		exit(EXIT_FAILURE);
+	}
+	while(fgets(line,sizeof line, fp)!=NULL) {
+		n++;
+	}
+	printf("numLines is %d", n);
+	return n;
+}
 void getFileContent(const char *name, char *arr[10]){
 	FILE *fp;
 	char line[256];
@@ -121,8 +141,8 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 		i++; 
 	} 	
 	char *word1 = token1; 
-	printf("word1 ");
-	printf(word1);	
+	//printf("word1 ");
+	//printf(word1);	
 	token2 = strtok(copy2, s); 
 	int j = 0; 
 	while (token2!=NULL && j < (numWords-1)) {
@@ -131,7 +151,7 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	} 
 	
 	char *word2 = token2;  
-	printf("word 2 %s", word2);	
+//	printf("word 2 %s", word2);	
 	/**compare nth tokens**/
 	int diff; 
 	diff = strcmp(word1, word2); 
