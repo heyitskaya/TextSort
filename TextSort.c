@@ -7,64 +7,66 @@ void sortFileWithIndex(char *arr[10]);
 int compareStrings(const void *elem1, const void *elem2);
 int numLines;
 //global variable
-//int index; 
 int numLines;
 int numWords; 
 int main(int argc, char *argv[]){
-	//int numLines=getNumLines;
-	//char *stringArr[numLines];
 	char *fileName;
 	char *flag;
-	
-	printf("argc %i\n", argc);
-	printf( argv[2]);
 	if(argc==0){
 		printf("Error");
 	}
-
 	else if (argc == 3) {
-		fileName = &(*argv[1]);
+		fileName = &(*argv[2]);
 		numLines=getNumLines(fileName);	
-		flag = &(*argv[2]); 
-		
-		//adding code to read flag, just need to change the number to int from char properly 
+		flag = &(*argv[1]);
+		//if the first is a dash and second is a number and at leasttwo characteres
 		char *ptr;
+		printf("flag 1 is %c\n", flag[1]);
+		int asc1=(int)flag[1];
+		printf("asc1 %d\n", asc1); 
+		if(flag[0]!='-' || strlen(flag)<2 || asc1<49 || asc1>57){
+			printf("Error: Bad command line parameter");
+			exit(1);
+		} 
+		//adding code to read flag, just need to change the number to int from char properly 
+
    			
 		numWords=((int)strtol(flag,&ptr,10))*(-1);	
-		printf("num is %d", numWords);
-		
-		 			 
 	}
-
 	else if(argc==2){
 		fileName = &(*argv[1]);
 	}
 
 	else{
-	//	numWord=*argv[1];
 		fileName = &(*argv[2]);
 	}
 //allocate size of array before getFileContent
 	char *stringArr[numLines];		
 	getFileContent(fileName, stringArr);
-	
+	for(int i=0;i<numLines;i++){
+		int len=strlen(stringArr[i]);
+		if(len>128){
+			printf("Line too long\n");
+			exit(1);
+		}
+		
+	}
+		
 		
 	if(numWords!=0){
-	//	printf("testing sort file with index ");
 		sortFileWithIndex(stringArr);
 	}
 	else{
 		sortFile(stringArr);
 	} 
-	//sortFileWithIndex(stringArr);
 	for(int i=0;i<numLines;i++){
 		printf("-----------\n");
 		printf(stringArr[i]);
 	}
-	//free(stringArr);
 	for(int j=0;j<numLines;j++){
 		free(stringArr[j]);
 	}
+	return 0;
 }
 int getNumLines(const char *name){
 	int n=0;
