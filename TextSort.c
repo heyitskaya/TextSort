@@ -5,19 +5,41 @@ void getFileContent(const char *name, char *arr[10]);
 void sortFile(char *arr[10]);
 void sortFileWithIndex(char *arr[10]);
 int compareStrings(const void *elem1, const void *elem2);
+
 //global variable
-int numWord=2;
+//int index; 
+int numWords = 2; 
 int main(int argc, char *argv[]){
 	int numLines=10;
 	char *stringArr[numLines];
 	char *fileName;
-	printf("argc %i", argc);
+	char *flag;
+	
+	printf("argc %i\n", argc);
 	if(argc==0){
 		printf("Error");
 	}
+
+	else if (argc == 3) {
+		fileName = &(*argv[1]);
+		flag = &(*argv[2]); 
+		
+		if (strlen(flag) == 2) { 
+			//adding code to read flag, just need to change the number to int from char properly
+			//char *end; 
+			//index = (int) strtol(flag[1], (char **)NULL, 10); 
+			//printf("Flag is %d\n", index);
+		}
+		else {
+			printf("Error: bad command line paramter");
+			exit(1); 
+		} 			 
+	}
+
 	else if(argc==2){
 		fileName = &(*argv[1]);
 	}
+
 	else{
 	//	numWord=*argv[1];
 		fileName = &(*argv[2]);
@@ -26,16 +48,18 @@ int main(int argc, char *argv[]){
 	getFileContent(fileName, stringArr);
 	//sortFile(stringArr);
 	//testing sort with index
-	int x;
-	x = compareStringsWithIndex(&stringArr[1], &stringArr[2]);
-	printf("the number is %d", x);
-/**	if(numWord!=0){
+	//int x;
+	//x = compareStringsWithIndex(&stringArr[1], &stringArr[2]);
+	//printf("the number is %d\n", x);
+	
+		
+	if(numWords!=0){
 		printf("testing sort file with index ");
 		sortFileWithIndex(stringArr);
 	}
 	else{
 		sortFile(stringArr);
-	} **/
+	} 
 	//sortFileWithIndex(stringArr);
 	for(int i=0;i<5;i++){
 		printf("-----------\n");
@@ -80,33 +104,36 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	/**deference to get strings**/
 	char *str1 = *strptr1;
 	char *str2 = *strptr2;
-	
 
+	char *copy1 = malloc(strlen(str1)+1); 
+	char *copy2 = malloc(strlen(str2)+1);
+	strcpy(copy1, str1); 
+	strcpy(copy2, str2); 
 	/**split on space**/
 	const char s[2] = " "; 
 	char *token1;  
 	char *token2; 
 	
-	token1 = strtok(str1, s); 
+	token1 = strtok(copy1, s); 
 	/**get nth tokens**/ 	
 	int i = 0; 
-	while (token1!=NULL && i < (numWord-1)) { 
+	while (token1!=NULL && i < (numWords-1)) { 
 		token1=strtok(NULL, s); 
 		i++; 
 	} 	
 	char *word1 = token1; 
-	printf("word1");
+	printf("word1 ");
 	printf(word1);	
-	token2 = strtok(str2, s); 
+	token2 = strtok(copy2, s); 
 	int j = 0; 
-	while (token2!=NULL && j < (numWord-1)) {
+	while (token2!=NULL && j < (numWords-1)) {
 		token2 = strtok(NULL, s);
 		j++; 
 	} 
-	printf("word2");
+	
 	char *word2 = token2;  
-	printf(word2);	
-/**compare nth tokens**/
+	printf("word 2 %s", word2);	
+	/**compare nth tokens**/
 	int diff; 
 	diff = strcmp(word1, word2); 
 	return diff; 
