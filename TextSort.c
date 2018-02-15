@@ -27,18 +27,13 @@ int main(int argc, char *argv[]){
 		numLines=getNumLines(fileName);	
 		flag = &(*argv[2]); 
 		
-		if (strlen(flag) == 2) { 
-
-			//adding code to read flag, just need to change the number to int from char properly 
-			char *ptr;
+		//adding code to read flag, just need to change the number to int from char properly 
+		char *ptr;
    			
-			 numWords=((int)strtol(flag,&ptr,10))*(-1);	
-			printf("num is %d", numWords);
-		}
-		else {
-			printf("Error: bad command line parameter");
-			exit(1); 
-		} 			 
+		numWords=((int)strtol(flag,&ptr,10))*(-1);	
+		printf("num is %d", numWords);
+		
+		 			 
 	}
 
 	else if(argc==2){
@@ -52,11 +47,6 @@ int main(int argc, char *argv[]){
 //allocate size of array before getFileContent
 	char *stringArr[numLines];		
 	getFileContent(fileName, stringArr);
-	//sortFile(stringArr);
-	//testing sort with index
-	//int x;
-	//x = compareStringsWithIndex(&stringArr[1], &stringArr[2]);
-	//printf("the number is %d\n", x);
 	
 		
 	if(numWords!=0){
@@ -67,9 +57,13 @@ int main(int argc, char *argv[]){
 		sortFile(stringArr);
 	} 
 	//sortFileWithIndex(stringArr);
-	for(int i=0;i<5;i++){
+	for(int i=0;i<numLines;i++){
 		printf("-----------\n");
 		printf(stringArr[i]);
+	}
+	//free(stringArr);
+	for(int j=0;j<numLines;j++){
+		free(stringArr[j]);
 	}
 }
 int getNumLines(const char *name){
@@ -102,6 +96,15 @@ void getFileContent(const char *name, char *arr[10]){
 	fclose(fp);	
 }
 
+int wordCount(char * s){
+int count =0;	
+for(int i=0;s[i]!='\0';i++){
+		if(s[i] == ' '){
+			count++;
+		}
+	}	
+return count+1;
+}
 int compareStrings (const void *elem1, const void *elem2) {
 	/**cast to actual type**/
 	char **strptr1;
@@ -123,38 +126,65 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	/**deference to get strings**/
 	char *str1 = *strptr1;
 	char *str2 = *strptr2;
-
+	int wc1=wordCount(str1);
+	printf("wc1 %d", wc1);
+	int wc2=wordCount(str2);
+	
 	char *copy1 = malloc(strlen(str1)+1); 
 	char *copy2 = malloc(strlen(str2)+1);
-	strcpy(copy1, str1); 
+	strcpy(copy1, str1);
+	printf("after allocation copy1 %s\n", copy1); 
 	strcpy(copy2, str2); 
 	/**split on space**/
 	const char s[2] = " "; 
 	char *token1;  
 	char *token2; 
-	
-	token1 = strtok(copy1, s); 
+	char *word1;  
 	/**get nth tokens**/ 	
-	int i = 0; 
+	int i = 0;
+	
+	if (wc1 > numWords-1) {
+		token1 = strtok(copy1, s);
 	while (token1!=NULL && i < (numWords-1)) { 
 		token1=strtok(NULL, s); 
 		i++; 
-	} 	
-	char *word1 = token1; 
-	//printf("word1 ");
-	//printf(word1);	
-	token2 = strtok(copy2, s); 
-	int j = 0; 
-	while (token2!=NULL && j < (numWords-1)) {
-		token2 = strtok(NULL, s);
-		j++; 
 	} 
-	
-	char *word2 = token2;  
-//	printf("word 2 %s", word2);	
+		
+	word1 = token1;
+	}
+	else {
+		char *p=strrchr(copy1, ' ');
+		if(p!=NULL){
+			word1 = p+1;  
+		}
+
+	}
+ 
+
+	int j = 0;
+	char *word2;
+	if(wc2>numWords-1){ //MIGHT FUCK UP LATER pls check
+		token2 = strtok(copy2, s);
+ 
+		while (token2!=NULL && j < (numWords-1)) {
+			token2 = strtok(NULL, s);
+			j++;
+			}
+		word2=token2;	
+	}
+	else{	
+		char *q = strrchr(copy2, ' '); 
+		if (q != NULL ) {
+		word2 = q+1;
+		} 
+	}
 	/**compare nth tokens**/
-	int diff; 
-	diff = strcmp(word1, word2); 
+	int diff;
+	printf("word1 %s\n", word1);
+	printf("word2 %s\n", word2);
+	diff = strcmp(word1, word2); //don't forget to add back
+	free(copy1); 
+	free(copy2);
 	return diff; 
 }
 
