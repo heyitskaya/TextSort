@@ -25,10 +25,9 @@ int main(int argc, char *argv[]){
 		flag = &(*argv[2]); 
 		
 		if (strlen(flag) == 2) { 
-			//adding code to read flag, just need to change the number to int from char properly
-			//char *end; 
-			//index = (int) strtol(flag[1], (char **)NULL, 10); 
-			//printf("Flag is %d\n", index);
+			//adding code to read flag, just need to change the number to int from char properly 
+			char c = flag[1];			
+			//index = (int) strtol(c, (char **)NULL, 10);
 		}
 		else {
 			printf("Error: bad command line paramter");
