@@ -7,7 +7,9 @@ void sortFileWithIndex(char *arr[10]);
 int compareStrings(const void *elem1, const void *elem2);
 int getNumLines(const char *name); 
 int numLines;
-int numWords; 
+int numWords;
+
+/**Read command line arguments, make sure they are valid, store file content, sort file based on parameters**/ 
 int main(int argc, char *argv[]){
 	char *fileName;
 	char *flag;
@@ -19,23 +21,26 @@ int main(int argc, char *argv[]){
 		fileName = &(*argv[2]);
 		numLines=getNumLines(fileName);	
 		flag = &(*argv[1]);
-		//if the first is a dash and second is a number and at leasttwo characters
+		
 		char *ptr;
-		int asc1=(int)flag[1]; 
+		int asc1=(int)flag[1];
+
+		//check that flag is at least 2 characters long, begins with a dash, and the second character is a digit 
 		if(flag[0]!='-' || strlen(flag)<2 || asc1<49 || asc1>57){
 			fprintf(stderr,"Error: Bad command line parameter\n");
 			exit(1);
 		} 
-   			
+   		//get index to sort by	
 		numWords=((int)strtol(flag,&ptr,10))*(-1);	
 	}
-
+	
+	//if no flag is given, sort by first word
 	else if(argc==2){
 		fileName = &(*argv[1]);
 		numLines=getNumLines(fileName);	
-		//fileName = &(*argv[1]);
-		FILE *fp=fopen(fileName,"r");
 		
+		FILE *fp=fopen(fileName,"r");
+		//if the only argument is not a file, print error
 		if(fp==NULL){
 			fprintf(stderr,"Error: Bad command line parameter\n");
 			exit(1);
@@ -60,13 +65,15 @@ int main(int argc, char *argv[]){
 		
 	}
 		
-		
+	//if flag is specified	
 	if(numWords!=0){
 		sortFileWithIndex(stringArr);
 	}
 	else{ 
 		sortFile(stringArr);
-	} 
+	}
+
+	//print sorted file and free memory 
 	for(int i=0;i<numLines;i++){
 		printf("%s", stringArr[i]);
 	}
@@ -75,6 +82,8 @@ int main(int argc, char *argv[]){
 	}
 	return 0;
 }
+
+/** Get number of lines in the file**/
 int getNumLines(const char *name){
 	int n=0;
 	FILE *fp;
@@ -89,7 +98,9 @@ int getNumLines(const char *name){
 	}
 	return n;
 }
-void getFileContent(const char *name, char *arr[10]){
+
+/**Stores file content in an array**/
+void getFileContent(const char *name, char *arr[numLines]){
 	 
 	FILE *fp;
 	char line[256];
@@ -100,22 +111,23 @@ void getFileContent(const char *name, char *arr[10]){
 		exit(1);
 	}
 	while(fgets(line,sizeof line, fp)!=NULL){
-		arr[currIndex]=malloc(strlen(line)+1); //250 chars
+		arr[currIndex]=malloc(strlen(line)+1); 
 		strcpy(arr[currIndex],line);
 		currIndex++;
 	}
 	fclose(fp);	
 }
-
+/**Get word count of a sentence and returns it**/
 int wordCount(char * s){
-int count =0;	
-for(int i=0;s[i]!='\0';i++){
+	int count =0;	
+	for(int i=0;s[i]!='\0';i++){
 		if(s[i] == ' '){
 			count++;
 		}
 	}	
-return count+1;
+	return count+1;
 }
+/**Comparator called when no flag is specified, sorts on first word**/
 int compareStrings (const void *elem1, const void *elem2) {
 	/**cast to actual type**/
 	char **strptr1;
@@ -129,7 +141,8 @@ int compareStrings (const void *elem1, const void *elem2) {
 	diff = strcmp (str1, str2);  
 	return diff; 
 }
-	
+
+/**Comparator called when flag is specified, sorts on word given by flag**/
 int compareStringsWithIndex(const void *elem1, const void *elem2){
 	char **strptr1=(char **) elem1;
 	char **strptr2=(char **) elem2;
@@ -150,7 +163,7 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	char *word1;  
 	/**get nth tokens**/ 	
 	int i = 0;
-	
+	/**if the flag given is within bounds of the length of the string**/
 	if (wc1 > numWords-1) {
 		token1 = strtok(copy1, s);
 		while (token1!=NULL && i < (numWords-1)) { 
@@ -160,6 +173,7 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 		
 		word1 = token1;
 	}
+	/**Get last word and sort by last word**/
 	else {
 		char *p=strrchr(copy1, ' ');
 		if(p!=NULL){
@@ -193,10 +207,12 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	return diff; 
 }
 
-void sortFileWithIndex(char *arr[10]){
-	qsort(arr, 5, sizeof(char *), compareStringsWithIndex);
+/**Call this sort when flag is specified**/
+void sortFileWithIndex(char *arr[numLines]){
+	qsort(arr, numLines, sizeof(char *), compareStringsWithIndex);
 }
-void sortFile(char *arr[10]) {
-	qsort(arr, 5, sizeof(char *), compareStrings); 
+/**Call this sort when flag is not specified**/
+void sortFile(char *arr[numLines]) {
+	qsort(arr, numLines, sizeof(char *), compareStrings); 
 }
 
