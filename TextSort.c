@@ -12,8 +12,9 @@ int numWords;
 int main(int argc, char *argv[]){
 	char *fileName;
 	char *flag;
+	
 	if(argc==0){
-		printf("Error");
+		fprintf(stderr, "Error: Bad command line parameters\n");
 	}
 	else if (argc == 3) {
 		fileName = &(*argv[2]);
@@ -25,20 +26,30 @@ int main(int argc, char *argv[]){
 		int asc1=(int)flag[1];
 		printf("asc1 %d\n", asc1); 
 		if(flag[0]!='-' || strlen(flag)<2 || asc1<49 || asc1>57){
-			printf("Error: Bad command line parameter");
+			fprintf(stderr,"Error: Bad command line parameter\n");
 			exit(1);
 		} 
-		//adding code to read flag, just need to change the number to int from char properly 
-
    			
 		numWords=((int)strtol(flag,&ptr,10))*(-1);	
 	}
+
 	else if(argc==2){
 		fileName = &(*argv[1]);
+		numLines=getNumLines(fileName);	
+		//fileName = &(*argv[1]);
+		FILE *fp=fopen(fileName,"r");
+		
+		if(fp==NULL){
+			fprintf(stderr,"Error: Bad command line parameter\n");
+			exit(1);
+		}
+		fclose(fp); 
 	}
 
 	else{
-		fileName = &(*argv[2]);
+		fprintf(stderr,"Error: Bad command line parameter\n");
+		exit(1); 
+
 	}
 //allocate size of array before getFileContent
 	char *stringArr[numLines];		
@@ -46,7 +57,7 @@ int main(int argc, char *argv[]){
 	for(int i=0;i<numLines;i++){
 		int len=strlen(stringArr[i]);
 		if(len>128){
-			printf("Line too long\n");
+			fprintf(stderr,"Error: Line too long\n");
 			exit(1);
 		}
 		
@@ -57,11 +68,12 @@ int main(int argc, char *argv[]){
 		sortFileWithIndex(stringArr);
 	}
 	else{
+		printf("num lines %d\n", numLines); 
 		sortFile(stringArr);
 	} 
 	for(int i=0;i<numLines;i++){
-		printf("-----------\n");
-		printf(stringArr[i]);
+		printf("In for loop"); 
+		printf("%s\n", stringArr[i]);
 	}
 	for(int j=0;j<numLines;j++){
 		free(stringArr[j]);
@@ -74,7 +86,9 @@ int getNumLines(const char *name){
 	char line[256];
 	fp=fopen(name,"r");
 	if(fp==NULL){
-		exit(EXIT_FAILURE);
+		printf("here");
+		fprintf(stderr, "Error: Cannot open file\n");
+		exit(1);
 	}
 	while(fgets(line,sizeof line, fp)!=NULL) {
 		n++;
@@ -83,12 +97,14 @@ int getNumLines(const char *name){
 	return n;
 }
 void getFileContent(const char *name, char *arr[10]){
+	printf("Here"); 
 	FILE *fp;
 	char line[256];
 	fp=fopen(name, "r");
 	int currIndex=0;
 	if(fp==NULL){
-		exit(EXIT_FAILURE);
+		fprintf(stderr,"Error: Cannot open file %s", name);
+		exit(1);
 	}
 	while(fgets(line,sizeof line, fp)!=NULL){
 		arr[currIndex]=malloc(strlen(line)+1); //250 chars
