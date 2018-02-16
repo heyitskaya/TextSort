@@ -5,8 +5,7 @@ void getFileContent(const char *name, char *arr[10]);
 void sortFile(char *arr[10]);
 void sortFileWithIndex(char *arr[10]);
 int compareStrings(const void *elem1, const void *elem2);
-int numLines;
-//global variable
+int getNumLines(const char *name); 
 int numLines;
 int numWords; 
 int main(int argc, char *argv[]){
@@ -20,11 +19,9 @@ int main(int argc, char *argv[]){
 		fileName = &(*argv[2]);
 		numLines=getNumLines(fileName);	
 		flag = &(*argv[1]);
-		//if the first is a dash and second is a number and at leasttwo characteres
+		//if the first is a dash and second is a number and at leasttwo characters
 		char *ptr;
-		printf("flag 1 is %c\n", flag[1]);
-		int asc1=(int)flag[1];
-		printf("asc1 %d\n", asc1); 
+		int asc1=(int)flag[1]; 
 		if(flag[0]!='-' || strlen(flag)<2 || asc1<49 || asc1>57){
 			fprintf(stderr,"Error: Bad command line parameter\n");
 			exit(1);
@@ -51,7 +48,7 @@ int main(int argc, char *argv[]){
 		exit(1); 
 
 	}
-//allocate size of array before getFileContent
+	//allocate size of array before getFileContent
 	char *stringArr[numLines];		
 	getFileContent(fileName, stringArr);
 	for(int i=0;i<numLines;i++){
@@ -67,13 +64,11 @@ int main(int argc, char *argv[]){
 	if(numWords!=0){
 		sortFileWithIndex(stringArr);
 	}
-	else{
-		printf("num lines %d\n", numLines); 
+	else{ 
 		sortFile(stringArr);
 	} 
 	for(int i=0;i<numLines;i++){
-		printf("In for loop"); 
-		printf("%s\n", stringArr[i]);
+		printf("%s", stringArr[i]);
 	}
 	for(int j=0;j<numLines;j++){
 		free(stringArr[j]);
@@ -86,18 +81,16 @@ int getNumLines(const char *name){
 	char line[256];
 	fp=fopen(name,"r");
 	if(fp==NULL){
-		printf("here");
 		fprintf(stderr, "Error: Cannot open file\n");
 		exit(1);
 	}
 	while(fgets(line,sizeof line, fp)!=NULL) {
 		n++;
 	}
-	printf("numLines is %d", n);
 	return n;
 }
 void getFileContent(const char *name, char *arr[10]){
-	printf("Here"); 
+	 
 	FILE *fp;
 	char line[256];
 	fp=fopen(name, "r");
@@ -133,8 +126,7 @@ int compareStrings (const void *elem1, const void *elem2) {
 	char *str1 = *strptr1; 
 	char *str2 = *strptr2;	
 	int diff;	
-	diff = strcmp (str1, str2); 
-	printf("%d", diff); 
+	diff = strcmp (str1, str2);  
 	return diff; 
 }
 	
@@ -145,13 +137,11 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	char *str1 = *strptr1;
 	char *str2 = *strptr2;
 	int wc1=wordCount(str1);
-	printf("wc1 %d", wc1);
 	int wc2=wordCount(str2);
 	
 	char *copy1 = malloc(strlen(str1)+1); 
 	char *copy2 = malloc(strlen(str2)+1);
 	strcpy(copy1, str1);
-	printf("after allocation copy1 %s\n", copy1); 
 	strcpy(copy2, str2); 
 	/**split on space**/
 	const char s[2] = " "; 
@@ -163,12 +153,12 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	
 	if (wc1 > numWords-1) {
 		token1 = strtok(copy1, s);
-	while (token1!=NULL && i < (numWords-1)) { 
-		token1=strtok(NULL, s); 
-		i++; 
-	} 
+		while (token1!=NULL && i < (numWords-1)) { 
+			token1=strtok(NULL, s); 
+			i++; 
+		} 
 		
-	word1 = token1;
+		word1 = token1;
 	}
 	else {
 		char *p=strrchr(copy1, ' ');
@@ -178,10 +168,9 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 
 	}
  
-
 	int j = 0;
 	char *word2;
-	if(wc2>numWords-1){ //MIGHT FUCK UP LATER pls check
+	if(wc2>numWords-1){ 
 		token2 = strtok(copy2, s);
  
 		while (token2!=NULL && j < (numWords-1)) {
@@ -198,9 +187,7 @@ int compareStringsWithIndex(const void *elem1, const void *elem2){
 	}
 	/**compare nth tokens**/
 	int diff;
-	printf("word1 %s\n", word1);
-	printf("word2 %s\n", word2);
-	diff = strcmp(word1, word2); //don't forget to add back
+	diff = strcmp(word1, word2); 
 	free(copy1); 
 	free(copy2);
 	return diff; 
